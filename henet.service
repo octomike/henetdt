@@ -1,0 +1,7 @@
+[Unit]
+Description=Henet Daily Test
+OnFailure=status-email-user@%n.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/henet.py

@@ -1,0 +1,10 @@
+[Unit]
+Description=Henet Daily Test Timer
+
+[Timer]
+OnBootSec=5min
+OnActiveSec=87000
+Persistent=true
+
+[Install]
+WantedBy=timers.target
