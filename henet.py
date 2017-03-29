@@ -4,6 +4,9 @@ import requests
 from subprocess import check_output
 from shlex import split as ssplit
 from shutil import which
+from datetime import datetime
+import socket
+
 
 url = 'https://ipv6.he.net/certification/login.php'
 auth_data = {
@@ -11,14 +14,24 @@ auth_data = {
     'f_pass': ''
 }
 
+def get_domain():
+    dayofyear = datetime.now().timetuple().tm_yday
+    with open('aaaa_domains.txt', 'r') as f:
+        for lineix in range(dayofyear):
+            domain = f.readline()
+    return domain.replace('\n','')
+
 def runtest(test, jar):
     testurl = 'https://ipv6.he.net/certification/daily.php?test='+test
+    domain = get_domain()
+    ip6 = socket.getaddrinfo(domain, None, socket.AF_INET6)[0][4][0]
     if test == 'aaaa':
-        cmd = 'dig -t AAAA he.net'
+        cmd = 'dig -t AAAA '+domain
     elif test == 'ptr':
-        cmd = 'dig -x 2001:470:0:76::2'
+        cmd = 'dig -x '+ip6
     elif test == 'ping':
-        cmd = 'ping -6 -c3 he.net'
+        cmd = 'ping -6 -c3 '+domain
+    # apparently those two tests don't need unique values every day..
     elif test == 'traceroute':
         cmd = 'traceroute -6 he.net'
     elif test == 'whois':
