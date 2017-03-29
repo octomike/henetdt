@@ -25,7 +25,7 @@ def runtest(test, jar):
         cmd = 'whois 2001:470:0:76::2'
     print('running test "{}" with "{}"'.format(test, cmd))
     data = check_output(ssplit(cmd)).decode('utf-8')
-    r = requests.post(testurl, data=data, cookies=jar)
+    r = requests.post(testurl, data={'input': data}, cookies=jar)
 
 def main():
     assert auth_data['f_user'] is not '', 'missing auth_data'
@@ -33,7 +33,7 @@ def main():
         assert which(cmd) is not None, "command {} is missing".format(cmd)
     r = requests.post(url, data = auth_data)
     assert r.status_code is 200, 'login failed'
-    jar = r.cookies
+    jar = r.history[0].cookies
     tests = ['aaaa', 'ptr', 'ping', 'traceroute', 'whois']
     for testparm in tests:
         runtest(testparm, jar)
