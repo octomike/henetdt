@@ -15,11 +15,13 @@ auth_data = {
 }
 
 def get_domain():
+    """
+    If this domain at some point doesn't work anymore, feel free to generate
+    a zone yourself.  Finding 365 domains with correctly set AAAA/PTR was
+    harder than this..
+    """
     dayofyear = datetime.now().timetuple().tm_yday
-    with open('aaaa_domains.txt', 'r') as f:
-        for lineix in range(dayofyear):
-            domain = f.readline()
-    return domain.replace('\n','')
+    return "{}.he.galax.is".format(dayofyear)
 
 def runtest(test, jar):
     testurl = 'https://ipv6.he.net/certification/daily.php?test='+test
@@ -45,6 +47,7 @@ def main():
     for cmd in ['dig', 'whois', 'traceroute', 'ping']:
         assert which(cmd) is not None, "command {} is missing".format(cmd)
     r = requests.post(url, data = auth_data)
+    dayofyear = datetime.now().timetuple().tm_yday
     assert r.status_code is 200, 'login failed'
     jar = r.history[0].cookies
     tests = ['aaaa', 'ptr', 'ping', 'traceroute', 'whois']
