@@ -21,14 +21,14 @@ def get_domain():
     harder than this..
     """
     dayofyear = datetime.now().timetuple().tm_yday
-    return "{}.he.galax.is".format(dayofyear)
+    return "{}.he.galax.is.".format(dayofyear)
 
 def runtest(test, jar):
     testurl = 'https://ipv6.he.net/certification/daily.php?test='+test
     domain = get_domain()
     ip6 = socket.getaddrinfo(domain, None, socket.AF_INET6)[0][4][0]
     if test == 'aaaa':
-        cmd = 'dig -t AAAA '+domain
+        cmd = 'dig -t AAAA @ns1.galax.is '+domain
     elif test == 'ptr':
         cmd = 'dig -x '+ip6
     elif test == 'ping':
